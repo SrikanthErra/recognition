@@ -36,7 +36,7 @@ class Recognition extends StatelessWidget {
               ),
               AppInputButtonComponent(
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.ObjectDetectionPage);
+                    Navigator.pushNamed(context, AppRoutes.CameraView);
                   }, buttonText: "Object Detection"),
             ],
           ),
