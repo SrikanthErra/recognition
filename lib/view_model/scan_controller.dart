@@ -6,7 +6,129 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tflite_v2/tflite_v2.dart';
 
+
+
 class ScancodeController extends GetxController {
+  // Other existing code remains unchanged...
+
+  late bool isDetectingObjects;
+  late bool isCameraStreaming;
+  late CameraController cameraController;
+  late List<CameraDescription> cameras;
+  var cameraCount = 0;
+
+  var isCameraInitialized = false.obs; //obs ----. observable
+
+  var x, y, w, h = 0.0;
+  var label = '';
+
+  @override
+  void onInit() {
+    super.onInit();
+    initCamera();
+    initTFLite();
+    isDetectingObjects = false;
+    isCameraStreaming = false;
+  }
+
+  // Existing code for initCamera and initTFLite remains the same...
+
+  Future<void> objectDetector(CameraImage image) async {
+    if (isDetectingObjects) {
+      return; // Avoid initiating another detection if one is in progress.
+    }
+    isDetectingObjects = true;
+
+    try {
+      var detector = await Tflite.detectObjectOnFrame(
+        bytesList: image.planes.map((plane) {
+          return plane.bytes;
+        }).toList(),
+        imageHeight: image.height,
+        imageWidth: image.width,
+        imageMean: 127.5,
+        imageStd: 127.5,
+        rotation: 90,
+       // numResults: 1,
+        threshold: 0.4,
+        asynch: true);
+
+    if (detector != null) {
+      print("Result is $detector");
+    }
+
+      if (detector != null) {
+        if(detector.first['confidenceInClass'] > 0.5){
+          print("Result is $detector");
+          x = detector.first['rect']['x'];
+          y = detector.first['rect']['y'];
+          w = detector.first['rect']['w'];
+          h = detector.first['rect']['h'];
+          label = detector.first['detectedClass'].toString();
+        }
+        update();
+        
+        // Handle the results or update the UI accordingly.
+      }
+    } catch (e) {
+      print("Error in object detection: $e");
+    }
+
+    isDetectingObjects = false;
+  }
+
+  initTFLite() async {
+    var res = await Tflite.loadModel(
+        model: "assets/model.tflite",
+        labels: "assets/labels.txt",
+        numThreads: 1,
+        isAsset: true,
+        useGpuDelegate: false);
+    print("result is $res");
+  }
+
+  Future<void> initCamera() async {
+    if (await Permission.camera.request().isGranted) {
+      cameras = await availableCameras();
+      cameraController = CameraController(cameras[0], ResolutionPreset.max);
+
+      try {
+        await cameraController.initialize();
+        isCameraInitialized(true);
+        update();
+        isCameraStreaming = true;
+        await cameraController.startImageStream((image) {
+          if (isCameraStreaming) {
+            cameraCount++;
+            if (cameraCount % 10 == 0) {
+              cameraCount = 0;
+              objectDetector(image);
+            }
+          }
+        });
+      } catch (e) {
+        print("Error initializing camera: $e");
+        // Handle camera initialization error.
+      }
+    } else {
+      await Permission.camera.request();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isCameraStreaming = false; // Stop streaming before disposing.
+    cameraController.stopImageStream();
+    cameraController.dispose();
+    Tflite.close(); // Close the TFLite interpreter when not in use.
+  }
+}
+
+
+
+
+/* class ScancodeController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
@@ -39,7 +161,7 @@ class ScancodeController extends GetxController {
       await cameraController.initialize();
       isCameraInitialized(true); //isCameraInitialized.value = true;
       update();
-      /* await cameraController.startImageStream((image) async{
+      await cameraController.startImageStream((image) async{
           cameraCount++;
           print("cameraCount----- $cameraCount");
           print("image $image");
@@ -49,7 +171,7 @@ class ScancodeController extends GetxController {
             print("isCameraInitialized $isCameraInitialized");
           }
           update();
-        }); */
+        });
 
 
       /* cameraController.initialize().then((value) {
@@ -128,4 +250,4 @@ class ScancodeController extends GetxController {
     int endTime = new DateTime.now().millisecondsSinceEpoch;
     print("Inference took ${endTime - startTime}ms");
   }
-}
+} */
