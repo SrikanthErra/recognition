@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
 import 'package:text_recognition_ocr_scanner/app_input_button_component.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class Recognition extends StatelessWidget {
   const Recognition({super.key});
@@ -27,7 +28,10 @@ class Recognition extends StatelessWidget {
                 height: 20,
               ),
               AppInputButtonComponent(
-                  onPressed: () {
+                  onPressed: () async{
+                    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                    print("deviceInfo ${androidInfo.supportedAbis}");
                     print("5678678");
                     Navigator.pushNamed(context, AppRoutes.VoiceToText);
                   }, buttonText: "Voice To Text"),

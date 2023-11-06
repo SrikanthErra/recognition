@@ -121,9 +121,15 @@ class ScancodeController extends GetxController {
     isCameraStreaming = false; // Stop streaming before disposing.
     cameraController.stopImageStream();
     cameraController.dispose();
-    Tflite.close(); // Close the TFLite interpreter when not in use.
+    //Tflite.close(); // Close the TFLite interpreter when not in use.
   }
 }
+
+
+
+
+
+
 
 
 
