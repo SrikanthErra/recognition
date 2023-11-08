@@ -7,8 +7,8 @@ class AppRoutes {
   static const ObjectDetector = "/ObjectDetector";
   static const ImagePickerDemo = "/ImagePickerDemo";
   static const CameraView = "/CameraView";
-  // static const InspectorSurveyReport = "/InspectorSurveyReport";
-  // static const SplashTwoScreen = "/SplashTwoScreen";
+  static const NumberPlateCameraView = "/NumberPlateCameraView";
+  //static const ResultScreen = "/ResultScreen";
   // static const teamAttendance = "/teamAttendance";
   // static const approveTeamAttendance = "/approveTeamAttendance";
   // static const privacyPolicy= "/privacyPolicy";

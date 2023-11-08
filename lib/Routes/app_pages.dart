@@ -5,6 +5,7 @@ import 'package:text_recognition_ocr_scanner/image_to_text.dart';
 import 'package:text_recognition_ocr_scanner/object_detector.dart';
 import 'package:text_recognition_ocr_scanner/recognition.dart';
 import 'package:text_recognition_ocr_scanner/view/camera_view.dart';
+import 'package:text_recognition_ocr_scanner/view/number_plate_camera_view.dart';
 import 'package:text_recognition_ocr_scanner/voice_to_text.dart';
 
 class AppPages {
@@ -16,7 +17,7 @@ class AppPages {
       AppRoutes.ObjectDetector: ((context) => ObjectDetector()),
       AppRoutes.ImagePickerDemo: ((context) => ImagePickerDemo()),
       AppRoutes.CameraView: ((context) => CameraView()),
-      // AppRoutes.SplashTwoScreen: ((context) => SplashTwoScreen()),
+      AppRoutes.NumberPlateCameraView: ((context) => NumberPlateCameraView()),
       // AppRoutes.LogIn: ((context) => LogIn()),
       // AppRoutes.LogIn: ((context) => LogIn()),
       // AppRoutes.LogIn: ((context) => LogIn()),

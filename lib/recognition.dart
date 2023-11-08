@@ -28,20 +28,31 @@ class Recognition extends StatelessWidget {
                 height: 20,
               ),
               AppInputButtonComponent(
-                  onPressed: () async{
+                  onPressed: () async {
                     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                    AndroidDeviceInfo androidInfo =
+                        await deviceInfo.androidInfo;
                     print("deviceInfo ${androidInfo.supportedAbis}");
                     print("5678678");
                     Navigator.pushNamed(context, AppRoutes.VoiceToText);
-                  }, buttonText: "Voice To Text"),
+                  },
+                  buttonText: "Voice To Text"),
               SizedBox(
                 height: 20,
               ),
               AppInputButtonComponent(
                   onPressed: () {
                     Navigator.pushNamed(context, AppRoutes.CameraView);
-                  }, buttonText: "Object Detection"),
+                  },
+                  buttonText: "Object Detection"),
+              SizedBox(
+                height: 20,
+              ),
+              AppInputButtonComponent(
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.NumberPlateCameraView);
+                  },
+                  buttonText: "Number Plate Detection"),
             ],
           ),
         ),
