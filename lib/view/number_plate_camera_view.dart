@@ -1,14 +1,13 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:image/image.dart' as img;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
-import 'package:text_recognition_ocr_scanner/result_screen.dart';
 import 'package:text_recognition_ocr_scanner/view_model/number_plate_controller.dart';
-import 'package:text_recognition_ocr_scanner/view_model/scan_controller.dart';
 
 class NumberPlateCameraView extends StatefulWidget {
   const NumberPlateCameraView({Key? key}) : super(key: key);
@@ -29,6 +28,12 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitDown,
+    ]);
     return Scaffold(
       //resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -49,13 +54,33 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
               height: double.infinity,
               width: double.infinity,
               color: Colors.transparent,
-              child: Column(
+              child: Stack(
                 children: [
-                  CameraPreview(controller.cameraController),
+                  Positioned(
+                      top: 0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: CameraPreview(controller.cameraController)),
 
-                  Expanded(
-                    child: TextButton(
-                        onPressed: () {
+                  /* RotatedBox(
+                    quarterTurns: 1 -
+                        controller.cameraController.description
+                                .sensorOrientation ~/
+                            90,
+                    child: CameraPreview(controller.cameraController),
+                  ), */
+
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.amber)),
+                        onPressed: () async {
+                          print(
+                              "orientation ${MediaQuery.of(context).orientation}");
+
                           controller.cameraController
                               .takePicture()
                               .then((value) async {
@@ -65,14 +90,12 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
                             File? croppedFIle = await cropImage(file);
                             print("cropped image is $croppedFIle");
                             await controller.detectImage(croppedFIle!, context);
-
-                            await navigator?.push(MaterialPageRoute(
-                                builder: (context) => ResultScreen(
-                                    text: controller.recognizedText.text,
-                                    croppedFile: croppedFIle  /* recognizedText.text */)));
                           });
                         },
-                        child: Text("Capture")),
+                        child: Text(
+                          "Capture",
+                          style: TextStyle(color: Colors.black),
+                        )),
                   ),
                   // Add any additional UI components or buttons here.
                 ],
@@ -112,7 +135,16 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
       );
 
       if (croppedFile != null) {
-        return File(croppedFile.path);
+        File cropped = File(croppedFile.path);
+        /* bool isPortrait = await isImagePortrait(cropped);
+
+        if (!isPortrait) {
+          File convertedFile = await convertToPortrait(cropped);
+          return convertedFile;
+        } else {
+          return cropped;
+        } */
+        return cropped;
       } else {
         // Handle the case when the cropping operation fails
         return null;
@@ -122,6 +154,28 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
       print("Error while cropping: $e");
       return null;
     }
+  }
+
+  Future<bool> isImagePortrait(File imageFile) async {
+    // Read image using image library
+    img.Image? image = img.decodeImage(await imageFile.readAsBytes());
+
+    // Check image orientation
+    return image!.width <= image.height;
+  }
+
+  Future<File> convertToPortrait(File imageFile) async {
+    // Read image using image library
+    img.Image? image = img.decodeImage(await imageFile.readAsBytes());
+
+    // Rotate image if it's landscape to make it portrait
+    img.Image convertedImage = img.copyRotate(image!, angle: -90);
+
+    // Save the converted image and return File
+    File convertedFile = File(imageFile.path);
+    convertedFile.writeAsBytesSync(img.encodeJpg(convertedImage));
+
+    return convertedFile;
   }
 
   @override

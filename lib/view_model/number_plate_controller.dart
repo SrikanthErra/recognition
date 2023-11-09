@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
 import 'package:text_recognition_ocr_scanner/result_screen.dart';
+import 'package:text_recognition_ocr_scanner/view/ScreenArguments.dart';
 import 'package:tflite_v2/tflite_v2.dart';
 
 class NumberPlateController extends GetxController {
@@ -68,12 +70,11 @@ class NumberPlateController extends GetxController {
           recognizedText = await _textRecognizer.processImage(inputImage);
 
           print("recognizedText.text ${recognizedText.text}");
+          await Navigator.pushNamed(context, AppRoutes.NumberPlateText,
+              arguments:
+                  ScreenArguments(recognizedText.text, image));
 
           //await Navigator.pushNamed(context, AppRoutes.);
-
-          
-
-          
         }
         update(); // Ensure the UI updates after getting the detection results.
       }
@@ -97,10 +98,13 @@ class NumberPlateController extends GetxController {
   Future<void> initCamera() async {
     if (await Permission.camera.request().isGranted) {
       cameras = await availableCameras();
+     
       cameraController = CameraController(cameras[0], ResolutionPreset.max);
+
 
       try {
         await cameraController.initialize();
+        //SystemChrome.setPreferredOrientations([cameraController.value.deviceOrientation]);
         isCameraInitialized(true);
         update();
         isCameraStreaming = true;

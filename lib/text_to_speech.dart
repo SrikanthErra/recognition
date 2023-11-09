@@ -1,40 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-//void main() => runApp(MyApp());
 
-class TextTOSpeech extends StatelessWidget {
+class TextToSpeech extends StatefulWidget {
+  @override
+  _TextToSpeechState createState() => _TextToSpeechState();
+}
+
+class _TextToSpeechState extends State<TextToSpeech> {
   final FlutterTts flutterTts = FlutterTts();
 
   @override
+  void dispose() {
+    flutterTts.stop(); // Stop speech when the widget is disposed
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Text-to-Speech Example'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Text-to-Speech Example'),
+        leading: IconButton(
+          onPressed: () {
+            stopSpeaking(); // Stop speaking when back button is pressed
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextButton(
-                onPressed: () async{
-                  await speakText("Hello, I am Flutter Text-to-Speech."); // Function to start speaking
-                },
-                child: Text('Speak'),
-              ),
-            ],
-          ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextButton(
+              onPressed: () async {
+                await speakText("Hello, I am Flutter Text-to-Speech.");
+              },
+              child: Text('Speak'),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Future speakText(String text) async {
-    await flutterTts.setSpeechRate(0.0); // Set the speed of speech
-    await flutterTts.setVolume(1.0); // Set the volume (0.0 to 1.0)
-    await flutterTts.setPitch(1.0); // Set the pitch (1.0 is default pitch)
+    await flutterTts.setSpeechRate(0.0);
+    await flutterTts.setVolume(1.0);
+    await flutterTts.setPitch(1.0);
 
-    await flutterTts.speak(text); // Speak the provided text
+    await flutterTts.speak(text);
+  }
+
+  void stopSpeaking() {
+    flutterTts.stop(); // Stop the speech
   }
 }

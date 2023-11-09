@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_pages.dart';
@@ -10,9 +11,6 @@ import 'package:text_recognition_ocr_scanner/cropped_cameraview.dart';
 import 'package:text_recognition_ocr_scanner/result_screen.dart';
 
 import 'package:image_cropper/image_cropper.dart';
-
-
-
 
 class ImageToText extends StatefulWidget {
   const ImageToText({super.key});
@@ -38,6 +36,12 @@ class _ImageToTextState extends State<ImageToText> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _future = _requestCameraPermission();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   @override
@@ -317,8 +321,8 @@ class _ImageToTextState extends State<ImageToText> with WidgetsBindingObserver {
                           Expanded(child: Container()),
                           Container(
                             //color: Colors.blue,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 100),
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
                               child: Center(
                                 child: ElevatedButton(
                                     style: ButtonStyle(

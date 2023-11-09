@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
 import 'package:text_recognition_ocr_scanner/app_input_button_component.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -8,6 +9,9 @@ class Recognition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+  ]);
     return Scaffold(
       appBar: AppBar(
         title: Text("Recognition"),
