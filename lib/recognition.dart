@@ -4,14 +4,25 @@ import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
 import 'package:text_recognition_ocr_scanner/app_input_button_component.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-class Recognition extends StatelessWidget {
+class Recognition extends StatefulWidget {
   const Recognition({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<Recognition> createState() => _RecognitionState();
+}
+
+class _RecognitionState extends State<Recognition> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-  ]);
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Recognition"),
@@ -54,7 +65,8 @@ class Recognition extends StatelessWidget {
               ),
               AppInputButtonComponent(
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.NumberPlateCameraView);
+                    Navigator.pushNamed(
+                        context, AppRoutes.NumberPlateCameraView);
                   },
                   buttonText: "Number Plate Detection"),
             ],

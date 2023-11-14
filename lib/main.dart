@@ -9,7 +9,7 @@ import 'package:text_recognition_ocr_scanner/Routes/app_pages.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
 import 'package:text_recognition_ocr_scanner/cropped_cameraview.dart';
 import 'package:text_recognition_ocr_scanner/result_screen.dart';
-
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 void main() {
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: AppColors.navy,
         ), */
         //home: SideMenu(),
-        //builder: EasyLoading.init(),
+        builder: EasyLoading.init(),
       /* theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

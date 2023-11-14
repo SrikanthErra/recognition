@@ -13,6 +13,20 @@ class ResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text ("Result"),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () async {
+            print("Back button pressed");
+            try {
+              print("Stop speaking");
+              stopSpeaking();
+              Navigator.pop(context);
+            } catch (e) {
+              print("Error in onPressed: $e");
+            }
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       body: Container(
         child: Padding(
@@ -58,5 +72,10 @@ class ResultScreen extends StatelessWidget {
     await flutterTts.setPitch(1.0); // Set the pitch (1.0 is default pitch)
 
     await flutterTts.speak(text); // Speak the provided text
+  }
+
+  void stopSpeaking() {
+    print("Stop speaking method called");
+    flutterTts.stop(); // Stop the speech
   }
 }

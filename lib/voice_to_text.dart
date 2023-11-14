@@ -43,11 +43,12 @@ class _VoiceToTextState extends State<VoiceToText> {
 
   /// Each time to start a speech recognition session
   void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult,
-    listenMode: ListenMode.dictation
-    /* listenFor: Duration(hours: 1),
+    await _speechToText.listen(
+        onResult: _onSpeechResult, listenMode: ListenMode.dictation
+        /* listenFor: Duration(hours: 1),
     pauseFor: Duration(hours: 1), */
-    );
+        );
+        _lastWords = "";
     setState(() {});
   }
 
@@ -118,23 +119,61 @@ class _VoiceToTextState extends State<VoiceToText> {
                     SizedBox(
                       height: 20,
                     ),
-                    Text("Words spoken are :  $_lastWords")
+                    Text("Words spoken are :  $_lastWords"),
+                    SizedBox(
+                      height: 100,
+                    ),
+                    GestureDetector(
+                      onTap: () async{
+                        print("sdfsdfdgd");
+                        _speechToText.isNotListening
+                            ? _startListening()
+                            : _stopListening();
+                      },
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            color: _speechToText.isNotListening
+                                ? Colors.red
+                                : Colors.green,
+                            child: Center(
+                              child: Text(
+                                _speechToText.isNotListening
+                                    ? "Speak"
+                                    : "Listening",
+                                style: TextStyle(
+                                    color: _speechToText.isNotListening
+                                        ? Colors.black
+                                        : Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                              ),
+                            ),
+                          )
+                          /* AssetImage(
+                      path
+                      widget.Img ?? AssetPath.cross,
+                      fit: BoxFit.cover,
+                                      ) */
+                          ),
+                    ),
                   ],
                 ),
-
-                
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: 
+      /* floatingActionButton: FloatingActionButton(
+        onPressed:
             // If not yet listening for speech start, otherwise stop
             _speechToText.isNotListening ? _startListening : _stopListening,
-        tooltip: _speechToText.isNotListening ? 'Start Listening' : 'Stop Listening',
+        tooltip:
+            _speechToText.isNotListening ? 'Start Listening' : 'Stop Listening',
         child: Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
-      ),
+      ), */
     );
   }
 

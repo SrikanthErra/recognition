@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
 
 class TextToSpeech extends StatefulWidget {
   @override
@@ -12,21 +12,33 @@ class _TextToSpeechState extends State<TextToSpeech> {
 
   @override
   void dispose() {
+    print("Dispose method called");
     flutterTts.stop(); // Stop speech when the widget is disposed
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       appBar: AppBar(
         title: Text('Text-to-Speech Example'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
         leading: IconButton(
-          onPressed: () {
-            stopSpeaking(); // Stop speaking when back button is pressed
-            Navigator.pop(context);
+          onPressed: () async {
+            print("Back button pressed");
+            try {
+              print("Stop speaking");
+              stopSpeaking();
+              Navigator.pop(context);
+            } catch (e) {
+              print("Error in onPressed: $e");
+            }
           },
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_forward_ios),
         ),
       ),
       body: Center(
@@ -54,6 +66,7 @@ class _TextToSpeechState extends State<TextToSpeech> {
   }
 
   void stopSpeaking() {
+    print("Stop speaking method called");
     flutterTts.stop(); // Stop the speech
   }
 }

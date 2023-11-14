@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -46,6 +47,7 @@ class NumberPlateController extends GetxController {
     isDetectingObjects = true;
 
     try {
+      EasyLoading.show(status: 'loading...');
       var detector = await Tflite.detectObjectOnImage(
         path: image.path,
         threshold: 0.05,
@@ -70,13 +72,28 @@ class NumberPlateController extends GetxController {
           recognizedText = await _textRecognizer.processImage(inputImage);
 
           print("recognizedText.text ${recognizedText.text}");
+          EasyLoading.dismiss();
           await Navigator.pushNamed(context, AppRoutes.NumberPlateText,
-              arguments:
-                  ScreenArguments(recognizedText.text, image));
+              arguments: ScreenArguments(recognizedText.text, image));
 
           //await Navigator.pushNamed(context, AppRoutes.);
         }
         update(); // Ensure the UI updates after getting the detection results.
+      } else {
+        EasyLoading.dismiss();
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("No Number Plate Detected"),
+                  content: Text("Please try again"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("OK"))
+                  ],
+                ));
       }
     } catch (e) {
       print("Error in object detection: $e");
@@ -98,9 +115,8 @@ class NumberPlateController extends GetxController {
   Future<void> initCamera() async {
     if (await Permission.camera.request().isGranted) {
       cameras = await availableCameras();
-     
-      cameraController = CameraController(cameras[0], ResolutionPreset.max);
 
+      cameraController = CameraController(cameras[0], ResolutionPreset.max);
 
       try {
         await cameraController.initialize();

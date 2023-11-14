@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_pages.dart';
@@ -274,12 +275,22 @@ class _ImageToTextState extends State<ImageToText> with WidgetsBindingObserver {
       print("cropped image is $croppedFIle");
 
       final inputImage = InputImage.fromFile(croppedFIle!);
+      EasyLoading.show(status: 'loading...');
       final recognizedText = await _textRecognizer.processImage(inputImage);
+      print("recognizedText.text ${recognizedText.text}");
 
-      await navigator.push(MaterialPageRoute(
-          builder: (context) => ResultScreen(
-              text: recognizedText.text,
-              croppedFile: croppedFIle /* recognizedText.text */)));
+      if (recognizedText.text.isNotEmpty || recognizedText.text != "") {
+        EasyLoading.dismiss();
+        await navigator.push(MaterialPageRoute(
+            builder: (context) => ResultScreen(
+                text: recognizedText.text,
+                croppedFile: croppedFIle /* recognizedText.text */)));
+      }
+      else {
+        EasyLoading.dismiss();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Text recognition failed. Please try again.")));
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("An error occurred while scanning text")));
@@ -299,11 +310,12 @@ class _ImageToTextState extends State<ImageToText> with WidgetsBindingObserver {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       _initCameraController(snapshot.data!);
-                      return Center(
-                        child:
-                            //CroppedCameraPreview(cameraController: _cameraController!,)
-                            CameraPreview(_cameraController!),
-                      );
+                      return Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: CameraPreview(_cameraController!));
                     } else {
                       return const LinearProgressIndicator();
                     }
@@ -319,25 +331,19 @@ class _ImageToTextState extends State<ImageToText> with WidgetsBindingObserver {
                     ? Column(
                         children: [
                           Expanded(child: Container()),
-                          Container(
-                            //color: Colors.blue,
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Center(
-                                child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.amber)),
-                                    onPressed: () async {
-                                      await _scanImage();
-                                    },
-                                    child: Text(
-                                      "Scan Text",
-                                      style: TextStyle(color: Colors.black),
-                                    )),
-                              ),
-                            ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStatePropertyAll(Colors.amber)),
+                                onPressed: () async {
+                                  await _scanImage();
+                                },
+                                child: Text(
+                                  "Scan Text",
+                                  style: TextStyle(color: Colors.black),
+                                )),
                           )
                         ],
                       )
