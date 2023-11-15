@@ -324,6 +324,7 @@ class _ImageToTextState extends State<ImageToText> with WidgetsBindingObserver {
               Scaffold(
                 appBar: AppBar(
                   title: const Text("Text Recognition Sample"),
+                  backgroundColor: Color.fromARGB(255, 2, 20, 69),
                 ),
                 backgroundColor:
                     _isPermissionGranted ? Colors.transparent : null,
@@ -336,13 +337,13 @@ class _ImageToTextState extends State<ImageToText> with WidgetsBindingObserver {
                             child: ElevatedButton(
                                 style: ButtonStyle(
                                     backgroundColor:
-                                        MaterialStatePropertyAll(Colors.amber)),
+                                        MaterialStatePropertyAll(Color.fromARGB(255, 2, 20, 69))),
                                 onPressed: () async {
                                   await _scanImage();
                                 },
                                 child: Text(
                                   "Scan Text",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.white),
                                 )),
                           )
                         ],

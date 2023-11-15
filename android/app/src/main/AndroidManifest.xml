@@ -17,9 +17,9 @@
 
     
     <application
-        android:label="text_recognition_ocr_scanner"
+        android:label="CGG AI"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
     android:name="com.yalantis.ucrop.UCropActivity"
     android:screenOrientation="portrait"

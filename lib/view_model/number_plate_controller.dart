@@ -9,6 +9,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
+import 'package:text_recognition_ocr_scanner/res/custom_error_alert.dart';
 import 'package:text_recognition_ocr_scanner/result_screen.dart';
 import 'package:text_recognition_ocr_scanner/view/ScreenArguments.dart';
 import 'package:tflite_v2/tflite_v2.dart';
@@ -77,22 +78,39 @@ class NumberPlateController extends GetxController {
               arguments: ScreenArguments(recognizedText.text, image));
 
           //await Navigator.pushNamed(context, AppRoutes.);
+        } else {
+          EasyLoading.dismiss();
+          showDialog(
+              context: context,
+              builder: (context) => CustomErrorAlert(
+                    descriptions: "No Number Plate Detected",
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+              /* AlertDialog(
+                    title: Text("No Number Plate Detected"),
+                    content: Text("Please try again"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("OK")).
+                    ],
+                  ) */
+              );
         }
         update(); // Ensure the UI updates after getting the detection results.
       } else {
         EasyLoading.dismiss();
         showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("No Number Plate Detected"),
-                  content: Text("Please try again"),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text("OK"))
-                  ],
+            builder: (context) => CustomErrorAlert(
+                  descriptions: "No Number Plate Detected",
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ));
       }
     } catch (e) {

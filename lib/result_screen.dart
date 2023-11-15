@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:text_recognition_ocr_scanner/res/image_constants.dart';
 
 class ResultScreen extends StatelessWidget {
   final String text;
@@ -12,7 +13,8 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text ("Result"),
+        title: const Text("Result"),
+        backgroundColor: Color.fromARGB(255, 2, 20, 69),
         centerTitle: true,
         leading: IconButton(
           onPressed: () async {
@@ -29,6 +31,12 @@ class ResultScreen extends StatelessWidget {
         ),
       ),
       body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(AssetPath.bg), fit: BoxFit.cover),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: SingleChildScrollView(
@@ -37,20 +45,24 @@ class ResultScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text(text)),
+                    Expanded(
+                        child: Text(
+                      text,
+                      style: TextStyle(
+                          color: Colors.white),
+                    )),
                     GestureDetector(
-                      onTap: () async{
+                      onTap: () async {
                         await speakText(text); // Function to start speaking
                       },
-                      child: Icon(Icons.keyboard_voice_outlined,
-                      color: Colors.green,
+                      child: Icon(
+                        Icons.keyboard_voice_outlined,
+                        color: Colors.green,
+                        size: 40,
                       ),
                     )
                   ],
                 ),
-
-                
-
                 SizedBox(
                   height: 20,
                 ),

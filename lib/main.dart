@@ -1,16 +1,10 @@
-import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_pages.dart';
 import 'package:text_recognition_ocr_scanner/Routes/app_routes.dart';
-import 'package:text_recognition_ocr_scanner/cropped_cameraview.dart';
-import 'package:text_recognition_ocr_scanner/result_screen.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_cropper/image_cropper.dart';
+import 'package:provider/provider.dart';
+import 'package:text_recognition_ocr_scanner/view_model/side_menu_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,20 +17,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    return MaterialApp(
-      title: 'Flutter Text Recognition',
-      initialRoute: AppRoutes.initial,
-        routes: AppPages.routes,
+    return MultiProvider(
+      providers: [
+          ChangeNotifierProvider(
+            create: (context) => SideMenuViewModel(),
+          )
+        ],
+      child: MaterialApp(
+        title: 'Flutter Text Recognition',
+        initialRoute: AppRoutes.initial,
+          routes: AppPages.routes,
+          debugShowCheckedModeBanner: false,
+          /* theme: ThemeData(
+            primarySwatch: AppColors.navy,
+          ), */
+          //home: SideMenu(),
+          builder: EasyLoading.init(),
         /* theme: ThemeData(
-          primarySwatch: AppColors.navy,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
         ), */
-        //home: SideMenu(),
-        builder: EasyLoading.init(),
-      /* theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ), */
-      //home: const MyHomePage(),
+        //home: const MyHomePage(),
+      ),
     );
   }
 }

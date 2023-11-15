@@ -33,6 +33,8 @@ class _CameraViewState extends State<CameraView> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Camera View"),
+        backgroundColor: Color.fromARGB(255, 2, 20, 69),
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

@@ -37,7 +37,9 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
     return Scaffold(
       //resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text("Number Plate Detectioon"),
+        title: Text("Number Plate Detection"),
+        backgroundColor: Color.fromARGB(255, 2, 20, 69),
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -75,8 +77,9 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                         style: ButtonStyle(
+                          //maximumSize: MaterialStatePropertyAll(Size(200, 50)),
                             backgroundColor:
-                                MaterialStatePropertyAll(Colors.amber)),
+                                MaterialStatePropertyAll(Color.fromARGB(255, 2, 20, 69))),
                         onPressed: () async {
                           print(
                               "orientation ${MediaQuery.of(context).orientation}");
@@ -94,7 +97,7 @@ class _NumberPlateCameraViewState extends State<NumberPlateCameraView> {
                         },
                         child: Text(
                           "Capture",
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(color: Colors.white),
                         )),
                   ),
                   // Add any additional UI components or buttons here.

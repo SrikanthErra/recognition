@@ -56,6 +56,16 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file("cgg_ai.jks")
+            storePassword "cggapps"
+            keyAlias "cggapps"
+            keyPassword "cggapps"
+        }
+
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

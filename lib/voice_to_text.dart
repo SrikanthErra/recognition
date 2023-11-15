@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:text_recognition_ocr_scanner/res/image_constants.dart';
 
 class VoiceToText extends StatefulWidget {
   VoiceToText({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _VoiceToTextState extends State<VoiceToText> {
         /* listenFor: Duration(hours: 1),
     pauseFor: Duration(hours: 1), */
         );
-        _lastWords = "";
+    _lastWords = "";
     setState(() {});
   }
 
@@ -87,83 +88,95 @@ class _VoiceToTextState extends State<VoiceToText> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Speech Demo'),
+        backgroundColor: Color.fromARGB(255, 2, 20, 69),
+        centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'Recognized words:',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ),
-            Expanded(
-              child: Container(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(AssetPath.bg), fit: BoxFit.cover),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
                 padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Text(
-                      // If listening is active show the recognized words
-                      _speechToText.isListening
-                          ? 'Listening'
-                          // If listening isn't active but could be tell the user
-                          // how to start it, otherwise indicate that speech
-                          // recognition is not yet ready or not supported on
-                          // the target device
-                          : _speechEnabled
-                              ? 'Tap the microphone to start listening...'
-                              : 'Speech not available',
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text("Words spoken are :  $_lastWords"),
-                    SizedBox(
-                      height: 100,
-                    ),
-                    GestureDetector(
-                      onTap: () async{
-                        print("sdfsdfdgd");
-                        _speechToText.isNotListening
-                            ? _startListening()
-                            : _stopListening();
-                      },
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            color: _speechToText.isNotListening
-                                ? Colors.red
-                                : Colors.green,
-                            child: Center(
-                              child: Text(
-                                _speechToText.isNotListening
-                                    ? "Speak"
-                                    : "Listening",
-                                style: TextStyle(
-                                    color: _speechToText.isNotListening
-                                        ? Colors.black
-                                        : Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                            ),
-                          )
-                          /* AssetImage(
-                      path
-                      widget.Img ?? AssetPath.cross,
-                      fit: BoxFit.cover,
-                                      ) */
-                          ),
-                    ),
-                  ],
+                child: Text(
+                  'Recognized words:',
+                  style: TextStyle(fontSize: 20.0, color: Colors.white),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        // If listening is active show the recognized words
+                        _speechToText.isListening
+                            ? 'Listening'
+                            // If listening isn't active but could be tell the user
+                            // how to start it, otherwise indicate that speech
+                            // recognition is not yet ready or not supported on
+                            // the target device
+                            : _speechEnabled
+                                ? 'Tap the microphone to start listening...'
+                                : 'Speech not available',
+      
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text("Words spoken are :  $_lastWords", style: TextStyle(color: Colors.white),),
+                      SizedBox(
+                        height: 100,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          print("sdfsdfdgd");
+                          _speechToText.isNotListening
+                              ? _startListening()
+                              : _stopListening();
+                        },
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(100)),
+                            child: Container(
+                              height: 100,
+                              width: 100,
+                              color: _speechToText.isNotListening
+                                  ? Colors.white
+                                  : Colors.green,
+                              child: Center(
+                                child: Text(
+                                  _speechToText.isNotListening
+                                      ? "Speak"
+                                      : "Listening",
+                                  style: TextStyle(
+                                      color: _speechToText.isNotListening
+                                          ? Colors.black
+                                          : Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                              ),
+                            )
+                            /* AssetImage(
+                        path
+                        widget.Img ?? AssetPath.cross,
+                        fit: BoxFit.cover,
+                                        ) */
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       /* floatingActionButton: FloatingActionButton(
